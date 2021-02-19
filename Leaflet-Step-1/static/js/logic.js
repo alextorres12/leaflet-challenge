@@ -7,15 +7,43 @@ d3.json(queryUrl, function(data){
 });
 
 function createFeatures(earthquakeData) {
+    
+
     // Function to bind a popup to each feature in the features array
     function onEachFeature(feature, layer) {
         layer.bindPopup("<h3>" + feature.properties.place +
-        "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
+        "</h3><hr><p>" + new Date(feature.properties.time) + "</p><p>Magnitude: " + feature.properties.mag + "</p>");
+    }
+
+    // L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
+    //     fillOpacity: 0.75,
+    //     color: "white",
+    //     fillColor: "purple",
+    //     radius: feature.properties.mag
+    // }); 
+
+    function getColor(depth){
+        return depth > 500 ? '#800026' :
+            depth > 300  ? '#BD0026' :
+            depth > 200  ? '#E31A1C' :
+            depth > 100  ? '#FC4E2A' :
+            depth > 50   ? '#FD8D3C' :
+            depth > 20   ? '#FEB24C' :
+            depth > 10   ? '#FED976' :
+                            '#FFEDA0';
+
     }
 
     // Create GeoJSON layer containing the features array
     // Run the function once for each piece of data in the array
     var earthquakes = L.geoJSON(earthquakeData, {
+        pointToLayer: function (feature, latlng){
+            return new L.CircleMarker(latlng, {
+                fillOpacity: 0.85,
+                color: getColor(feature.geometry.coordinates[2]),
+                radius: feature.properties.mag*4
+            })
+        },
         onEachFeature: onEachFeature
     });
 
@@ -71,15 +99,5 @@ function createMap(earthquakes, earthquakeData){
    }).addTo(myMap);
 
    console.log(earthquakeData[0].geometry.coordinates[1]);
-
-
-//    for (var i=0; i<features.length; i++){
-//         L.circle([features[i].geometry.coordinates[1], features[0].geometry.coordinates[0]], {
-//         fillOpacity: 0.75,
-//         color: "white",
-//         fillColor: "purple",
-//         radius: feature[i].properties.mag
-//       })
-//    }
 
 }
