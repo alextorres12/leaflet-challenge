@@ -1,5 +1,6 @@
 var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.geojson"
 
+
 // Get request to queryUrl
 d3.json(queryUrl, function(data){
    createFeatures(data.features);
@@ -10,7 +11,6 @@ function createFeatures(earthquakeData) {
     function onEachFeature(feature, layer) {
         layer.bindPopup("<h3>" + feature.properties.place +
         "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
-        
     }
 
     // Create GeoJSON layer containing the features array
@@ -20,10 +20,10 @@ function createFeatures(earthquakeData) {
     });
 
     // Pass earthquake layer to map creation function
-    createMap(earthquakes);
+    createMap(earthquakes, earthquakeData);
 }
 
-function createMap(earthquakes){
+function createMap(earthquakes, earthquakeData){
     
     // Define streetmap layer
     var streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -69,4 +69,17 @@ function createMap(earthquakes){
    L.control.layers(baseMaps, overlayMaps, {
        collapsed: false
    }).addTo(myMap);
+
+   console.log(earthquakeData[0].geometry.coordinates[1]);
+
+
+//    for (var i=0; i<features.length; i++){
+//         L.circle([features[i].geometry.coordinates[1], features[0].geometry.coordinates[0]], {
+//         fillOpacity: 0.75,
+//         color: "white",
+//         fillColor: "purple",
+//         radius: feature[i].properties.mag
+//       })
+//    }
+
 }
