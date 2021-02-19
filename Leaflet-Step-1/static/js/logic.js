@@ -15,13 +15,8 @@ function createFeatures(earthquakeData) {
         "</h3><hr><p>" + new Date(feature.properties.time) + "</p><p>Magnitude: " + feature.properties.mag + "</p>");
     }
 
-    // L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
-    //     fillOpacity: 0.75,
-    //     color: "white",
-    //     fillColor: "purple",
-    //     radius: feature.properties.mag
-    // }); 
-
+    // Function to adjust color based on depth of earthquake
+    // https://leafletjs.com/examples/choropleth/
     function getColor(depth){
         return depth > 500 ? '#800026' :
             depth > 300  ? '#BD0026' :
@@ -40,7 +35,8 @@ function createFeatures(earthquakeData) {
         pointToLayer: function (feature, latlng){
             return new L.CircleMarker(latlng, {
                 fillOpacity: 0.85,
-                color: getColor(feature.geometry.coordinates[2]),
+                color: "black",
+                fillColor: getColor(feature.geometry.coordinates[2]),
                 radius: feature.properties.mag*4
             })
         },
